@@ -1,6 +1,5 @@
 import { CanvasRenderingTarget2D } from 'fancy-canvas';
 import type {
-	//AutoscaleInfo,
 	BarData,
 	Coordinate,
 	DataChangedScope,

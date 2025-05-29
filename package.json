@@ -11,14 +11,15 @@
     "url": "git+https://github.com/IliiaDenisov/interactive-lw-charts-tools.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Iliia Denisov",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/IliiaDenisov/interactive-lw-charts-tools/issues"
   },
   "homepage": "https://github.com/IliiaDenisov/interactive-lw-charts-tools#readme",
   "dependencies": {
+    "@flatten-js/core": "^1.6.2",
     "flatten-js": "^0.6.9",
     "lightweight-charts": "^5.0.7"
   }

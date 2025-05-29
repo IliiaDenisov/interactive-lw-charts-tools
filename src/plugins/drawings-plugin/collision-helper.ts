@@ -1,4 +1,5 @@
 import { Point as Point2D, Vector as Vector2D } from "@flatten-js/core";
+
 import { Box } from "@flatten-js/core";
 import { MathHelper } from "./math-helper";
 
