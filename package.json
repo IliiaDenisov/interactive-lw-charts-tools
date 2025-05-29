@@ -1,0 +1,25 @@
+{
+  "name": "interactive-lw-charts-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IliiaDenisov/interactive-lw-charts-tools.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/IliiaDenisov/interactive-lw-charts-tools/issues"
+  },
+  "homepage": "https://github.com/IliiaDenisov/interactive-lw-charts-tools#readme",
+  "dependencies": {
+    "flatten-js": "^0.6.9",
+    "lightweight-charts": "^5.0.7"
+  }
+}
