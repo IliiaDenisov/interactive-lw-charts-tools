@@ -12,3 +12,7 @@ export type { CurveDrawingTool } from './plugins/drawings-plugin/curve'
 // Indicators
 export type { BandsIndicator } from './plugins/indicators-plugin/bollinger-bands'
 export type { SMAIndicator } from './plugins/indicators-plugin/simple-moving-average'
+
+// Creating drawing tools functionality
+export type { DrawingTypes } from './plugins/drawings-plugin/drawing-tools-creator.ts'
+export {createDrawingTool } from './plugins/drawings-plugin/drawing-tools-creator.ts'
