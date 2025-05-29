@@ -1,16 +1,24 @@
 {
   "name": "interactive-lw-charts-tools",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "interactive-lw-charts-tools offers a collection of drawing tools and technical indicators built on top of the Lightweight-Charts library",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.t.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IliiaDenisov/interactive-lw-charts-tools.git"
   },
-  "keywords": [],
+  "keywords": [
+    "drawing tools",
+    "charting library",
+    "charts",
+    "canvas",
+    "typescript"
+  ],
   "author": "Iliia Denisov",
   "license": "MIT",
   "type": "commonjs",
@@ -22,5 +30,10 @@
     "@flatten-js/core": "^1.6.2",
     "flatten-js": "^0.6.9",
     "lightweight-charts": "^5.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.24",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
   }
 }
