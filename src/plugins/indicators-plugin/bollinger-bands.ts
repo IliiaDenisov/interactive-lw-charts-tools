@@ -1,14 +1,10 @@
 import { CanvasRenderingTarget2D } from "fancy-canvas";
 import type {
-  AutoscaleInfo,
-  BarData,
   Coordinate,
   DataChangedScope,
   ISeriesPrimitive,
   IPrimitivePaneRenderer,
   IPrimitivePaneView,
-  LineData,
-  Logical,
   SeriesAttachedParameter,
   SeriesDataItemTypeMap,
   SeriesType,
@@ -18,7 +14,6 @@ import { ChartInstrumentBase } from "../chart-instrument-base.ts";
 import { BollingerBandsData, calculateBollingerBands, extractPrice, SMAData } from "./indicator-helper.ts";
 import { cloneReadonly } from "../../helpers/simple-clone.ts";
 import { ClosestTimeIndexFinder } from "../../helpers/closest-index.ts";
-import { UpperLowerInRange } from "../../helpers/min-max-in-range.ts";
 
 interface BandRendererData {
   x: Coordinate | number;
@@ -41,6 +36,19 @@ class BandsIndicatorPaneRenderer implements IPrimitivePaneRenderer {
 
       ctx.lineWidth = this._viewData.options.lineWidth;
       ctx.beginPath();
+      const linesAvg = new Path2D();
+      linesAvg.moveTo(points[0].x, points[0].average);
+      for (const point of points) {
+        linesAvg.lineTo(point.x, point.average);
+      }
+
+      // drawing down lines
+      ctx.lineWidth = this._viewData.options.lineWidth;
+      ctx.strokeStyle = this._viewData.options.lineAverageColor;
+      ctx.stroke(linesAvg);
+
+      ctx.lineWidth = this._viewData.options.lineWidth;
+      ctx.beginPath();
       const region = new Path2D();
       const linesUp = new Path2D();
       const linesDown = new Path2D();
@@ -52,7 +60,6 @@ class BandsIndicatorPaneRenderer implements IPrimitivePaneRenderer {
       }
       const end = points.length - 1;
       region.lineTo(points[end].x, points[end].lowerBand);
-      linesDown.moveTo(points[end].x, points[end].lowerBand);
       for (let i = points.length - 2; i >= 0; i--) {
         region.lineTo(points[i].x, points[i].lowerBand);
         linesDown.lineTo(points[i].x, points[i].lowerBand);
@@ -67,7 +74,8 @@ class BandsIndicatorPaneRenderer implements IPrimitivePaneRenderer {
       // drawing down lines
       ctx.strokeStyle = this._viewData.options.lineDownColor;
       ctx.stroke(linesDown);
-      ctx.fillStyle = this._viewData.options.fillColor;
+      
+	  ctx.fillStyle = this._viewData.options.fillColor;
       ctx.fill(region);
     });
   }
@@ -109,6 +117,7 @@ class BandsIndicatorPaneView implements IPrimitivePaneView {
 }
 
 export interface BandsIndicatorOptions {
+  lineAverageColor?: string;
   lineUpColor?: string;
   lineDownColor?: string;
   fillColor?: string;
@@ -116,10 +125,11 @@ export interface BandsIndicatorOptions {
 }
 
 const defaults: Required<BandsIndicatorOptions> = {
+  lineAverageColor: "rgba(255, 255, 0, 0.96)",
   lineUpColor: "rgb(200, 25, 25)",
   lineDownColor: "rgb(25, 200, 100)",
-  fillColor: "rgba(58, 217, 223, 0.25)",
-  lineWidth: 1,
+  fillColor: "rgba(8, 236, 244, 0.36)",
+  lineWidth: 3,
 };
 
 export class BandsIndicator
@@ -154,7 +164,6 @@ export class BandsIndicator
   }
 
   dataUpdated(scope: DataChangedScope) {
-    // plugin base has fired a data changed event
     this._seriesData = cloneReadonly(this.series.data());
     this._bandsData = calculateBollingerBands(this._seriesData, this._depth);
     if (scope === "full") {

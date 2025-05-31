@@ -90,7 +90,7 @@ export function calculateBollingerBands(
       bandsData[index - smaDepth] = {
         average: avgPrice,
         lowerBand: avgPrice - k * std,
-        upperBand: std + k * std,
+        upperBand: avgPrice + k * std,
         time: d.time,
       };
     }

@@ -6,8 +6,6 @@ import type {
   ISeriesPrimitive,
   IPrimitivePaneRenderer,
   IPrimitivePaneView,
-  LineData,
-  //Logical,
   SeriesAttachedParameter,
   SeriesDataItemTypeMap,
   SeriesType,
@@ -90,7 +88,7 @@ export interface SMAIndicatorOptions {
 }
 
 const defaults: Required<SMAIndicatorOptions> = {
-  lineColor: "rgb(246, 242, 8)",
+  lineColor: "rgb(8, 246, 171)",
   lineWidth: 5,
 };
 
