@@ -50,7 +50,7 @@ class TrianglePaneRenderer implements IPrimitivePaneRenderer {
       if (drawingPoints.length < 3) {
         ctx.beginPath();
         ctx.moveTo(drawingPoints[0].x, drawingPoints[0].y);
-        ctx.lineTo(drawingPoints[2].x, drawingPoints[1].y);
+        ctx.lineTo(drawingPoints[1].x, drawingPoints[1].y);
         ctx.strokeStyle = this._options.lineColor;
         ctx.lineWidth = scope.verticalPixelRatio;
         ctx.stroke();
