@@ -1,5 +1,4 @@
-
-import type { CanvasRenderingTarget2D } from 'fancy-canvas';
+import type { CanvasRenderingTarget2D } from "fancy-canvas";
 
 import type {
   Coordinate,
@@ -10,11 +9,11 @@ import type {
   Time,
   PrimitiveHoveredItem,
   IPrimitivePaneRenderer,
-} from 'lightweight-charts';
+} from "lightweight-charts";
 
-import { ChartInstrumentBase } from '../chart-instrument-base.ts';
-import { ensureDefined } from '../../helpers/assertions.ts';
-import { positionsBox } from '../../helpers/dimensions/positions.ts';
+import { ChartInstrumentBase } from "../chart-instrument-base.ts";
+import { ensureDefined } from "../../helpers/assertions.ts";
+import { positionsBox } from "../../helpers/dimensions/positions.ts";
 
 export interface ViewPoint {
   x: Coordinate | null;
@@ -52,7 +51,7 @@ export class RectangleAxisPaneRenderer implements IPrimitivePaneRenderer {
   }
 
   draw(target: CanvasRenderingTarget2D) {
-    target.useBitmapCoordinateSpace(scope => {
+    target.useBitmapCoordinateSpace((scope) => {
       if (this._p1 === null || this._p2 === null) return;
       const ctx = scope.context;
       ctx.globalAlpha = 0.5;
@@ -71,7 +70,6 @@ export class RectangleAxisPaneRenderer implements IPrimitivePaneRenderer {
   }
 }
 
-
 export class DrawingBase<DrawingOptions> extends ChartInstrumentBase {
   _options: DrawingOptions;
   _points: Point[];
@@ -85,10 +83,15 @@ export class DrawingBase<DrawingOptions> extends ChartInstrumentBase {
     super();
     this._points = points;
 
-    this._bounds = { _minTime: null, _maxTime: null, _minPrice: null, _maxPrice: null };
+    this._bounds = {
+      _minTime: null,
+      _maxTime: null,
+      _minPrice: null,
+      _maxPrice: null,
+    };
     this._points.forEach((point) => {
       this._updateDrawingBounds(point);
-    })
+    });
 
     this._options = {
       ...defaultOptions,
@@ -103,8 +106,7 @@ export class DrawingBase<DrawingOptions> extends ChartInstrumentBase {
   }
 
   public updatePoint(p: Point, index: number) {
-    if (index >= this._points.length || index < 0)
-      return;
+    if (index >= this._points.length || index < 0) return;
 
     this._points[index] = p;
     this.requestUpdate();
@@ -120,21 +122,39 @@ export class DrawingBase<DrawingOptions> extends ChartInstrumentBase {
   }
 
   protected _updateDrawingBounds(point: Point) {
-    this._bounds._minPrice = this._bounds._minPrice == null ? point.price as number : Math.min(this._bounds._minPrice, point.price) as number;
-    this._bounds._maxPrice = this._bounds._maxPrice == null ? point.price as number : Math.max(this._bounds._maxPrice, point.price) as number;
+    this._bounds._minPrice =
+      this._bounds._minPrice == null
+        ? (point.price as number)
+        : (Math.min(this._bounds._minPrice, point.price) as number);
+    this._bounds._maxPrice =
+      this._bounds._maxPrice == null
+        ? (point.price as number)
+        : (Math.max(this._bounds._maxPrice, point.price) as number);
 
-    this._bounds._minTime = this._bounds._minTime == null ? point.time as number: Math.min(this._bounds._minTime, point.time as number) as number;
-    this._bounds._maxTime = this._bounds._maxTime == null ? point.time as number: Math.max(this._bounds._maxTime, point.time as number) as number;
+    this._bounds._minTime =
+      this._bounds._minTime == null
+        ? (point.time as number)
+        : (Math.min(this._bounds._minTime, point.time as number) as number);
+    this._bounds._maxTime =
+      this._bounds._maxTime == null
+        ? (point.time as number)
+        : (Math.max(this._bounds._maxTime, point.time as number) as number);
   }
 }
 
-export type DrawingConstructor<TOptions, TDrawing extends DrawingBase<TOptions>> =
-  new (points: Point[], defaults: TOptions, options: Partial<TOptions>) => TDrawing;
+export type DrawingConstructor<
+  TOptions,
+  TDrawing extends DrawingBase<TOptions>
+> = new (
+  points: Point[],
+  defaults: TOptions,
+  options: Partial<TOptions>
+) => TDrawing;
 
 export class DrawingToolBase<
   TDrawing extends DrawingBase<TOptions>,
   TPreviewDrawing extends DrawingBase<TOptions>,
-  TOptions,
+  TOptions
 > {
   protected _chart: IChartApi | undefined;
   protected _series: ISeriesApi<SeriesType> | undefined;
@@ -164,8 +184,10 @@ export class DrawingToolBase<
   }
 
   protected _clickHandler = (param: MouseEventParams) => this._onClick(param);
-  protected _dblClickHandler = (param: MouseEventParams) => this._onDblClick(param);
-  protected _moveHandler = (param: MouseEventParams) => this._onMouseMove(param);
+  protected _dblClickHandler = (param: MouseEventParams) =>
+    this._onDblClick(param);
+  protected _moveHandler = (param: MouseEventParams) =>
+    this._onMouseMove(param);
 
   remove() {
     this.stopDrawing();
@@ -174,7 +196,7 @@ export class DrawingToolBase<
       this._chart.unsubscribeDblClick(this._dblClickHandler);
       this._chart.unsubscribeCrosshairMove(this._moveHandler);
     }
-    this._drawings.forEach(Polyline => {
+    this._drawings.forEach((Polyline) => {
       this._removeDrawing(Polyline);
     });
     this._drawings = [];
@@ -245,13 +267,11 @@ export class DrawingToolBase<
 
   protected _addNewDrawing(points: Point[]) {
     const clonnedPoints: Point[] = [];
-    points.forEach(val => clonnedPoints.push(Object.assign({}, val)));
+    points.forEach((val) => clonnedPoints.push(Object.assign({}, val)));
 
-    const drawing = new this.DrawingClass(
-      clonnedPoints,
-      this._defaultOptions,
-      { ...this._options },
-    );
+    const drawing = new this.DrawingClass(clonnedPoints, this._defaultOptions, {
+      ...this._options,
+    });
     this._drawings.push(drawing);
     ensureDefined(this._series).attachPrimitive(drawing);
   }
@@ -262,12 +282,12 @@ export class DrawingToolBase<
 
   protected _addPreviewDrawing(points: Point[]) {
     const clonnedPoints: Point[] = [];
-    points.forEach(val => clonnedPoints.push(Object.assign({}, val)));
+    points.forEach((val) => clonnedPoints.push(Object.assign({}, val)));
 
     this._previewDrawing = new this.PreviewDrawingClass(
       clonnedPoints,
       this._defaultOptions,
-      { ...this._options },
+      { ...this._options }
     );
     ensureDefined(this._series).attachPrimitive(this._previewDrawing);
   }

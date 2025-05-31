@@ -6,5 +6,5 @@
 5. When rendering a selected drawing - the points should be drawn with circles as in TV;
 6. Add ability to drag drawings; 
 7. Add ability to modify drawings by modifying their individual points;
-8. Go through drawings styles in make them consisent with each other;
+8. ~~Go through drawings styles in make them consisent with each other;~~
 9. Fix FibWedge hit test;

@@ -1,7 +1,5 @@
-import type { CanvasRenderingTarget2D } from 'fancy-canvas';
-import {
-  isBusinessDay
-} from 'lightweight-charts';
+import type { CanvasRenderingTarget2D } from "fancy-canvas";
+import { isBusinessDay } from "lightweight-charts";
 import type {
   Coordinate,
   IChartApi,
@@ -14,11 +12,19 @@ import type {
   SeriesType,
   Time,
   PrimitiveHoveredItem,
-} from 'lightweight-charts';
-import { DrawingBase, DrawingToolBase, RectangleAxisPaneRenderer, type Point, type ViewPoint } from './drawing-base.ts';
-import { Point as Point2D } from '@flatten-js/core';
-import { calculateDrawingPoint, convertViewPointToPoint2D } from './conversion-helper.ts';
-
+} from "lightweight-charts";
+import {
+  DrawingBase,
+  DrawingToolBase,
+  RectangleAxisPaneRenderer,
+  type Point,
+  type ViewPoint,
+} from "./drawing-base.ts";
+import { Point as Point2D } from "@flatten-js/core";
+import {
+  calculateDrawingPoint,
+  convertViewPointToPoint2D,
+} from "./conversion-helper.ts";
 
 class TimeLinePaneRenderer implements IPrimitivePaneRenderer {
   _points: ViewPoint[];
@@ -30,7 +36,7 @@ class TimeLinePaneRenderer implements IPrimitivePaneRenderer {
   }
 
   draw(target: CanvasRenderingTarget2D) {
-    target.useBitmapCoordinateSpace(scope => {
+    target.useBitmapCoordinateSpace((scope) => {
       if (this._points.length < 1) {
         return;
       }
@@ -60,14 +66,14 @@ class TimeLinePaneRenderer implements IPrimitivePaneRenderer {
 
     const p0: Point2D = convertViewPointToPoint2D(this._points[0]);
 
-    const tolerance: number = 3e-0;
+    const tolerance: number = 3;
     const hit: boolean = Math.abs(x - p0.x) < tolerance;
 
     if (hit) {
       return {
         cursorStyle: "grab",
-        externalId: 'time-line-drawing',
-        zOrder: 'top',
+        externalId: "time-line-drawing",
+        zOrder: "top",
       };
     } else {
       return null;
@@ -123,10 +129,7 @@ class TimeLinePaneView implements IPrimitivePaneView {
   }
 
   renderer() {
-    return new TimeLinePaneRenderer(
-      this._drawingPoints,
-      this._source._options,
-    );
+    return new TimeLinePaneRenderer(this._drawingPoints, this._source._options);
   }
 }
 
@@ -156,7 +159,7 @@ abstract class TimeLineAxisPaneView implements IPrimitivePaneView {
     );
   }
   zOrder(): PrimitivePaneViewZOrder {
-    return 'bottom';
+    return "bottom";
   }
 }
 
@@ -173,8 +176,12 @@ class FibWedgeTimeAxisPaneView extends TimeLineAxisPaneView {
   getPoints(): [Coordinate | null, Coordinate | null] {
     const timeScale = this._source.chart.timeScale();
 
-    const x1 = timeScale.timeToCoordinate(this._source._bounds._minTime as Time);
-    const x2 = timeScale.timeToCoordinate(this._source._bounds._maxTime as Time);
+    const x1 = timeScale.timeToCoordinate(
+      this._source._bounds._minTime as Time
+    );
+    const x2 = timeScale.timeToCoordinate(
+      this._source._bounds._maxTime as Time
+    );
     return [x1, x2];
   }
 }
@@ -246,15 +253,15 @@ export interface TimeLineOptions {
 }
 
 const defaultOptions: TimeLineOptions = {
-  color: 'green',
-  labelText: '',
+  color: "green",
+  labelText: "",
   width: 4,
-  labelBackgroundColor: 'green',
-  labelTextColor: 'white',
+  labelBackgroundColor: "green",
+  labelTextColor: "white",
   showLabels: false,
   priceLabelFormatter: (price: number) => price.toFixed(3), // => price.toFixed(2),
   timeLabelFormatter: (time: Time) => {
-    if (typeof time == 'string') return time;
+    if (typeof time == "string") return time;
     const date = isBusinessDay(time)
       ? new Date(time.year, time.month, time.day)
       : new Date(time * 1000);
@@ -269,14 +276,11 @@ class TimeLine extends DrawingBase<TimeLineOptions> {
   _priceAxisPaneViews: TimeLinePriceAxisPaneView[];
   _timeAxisPaneViews: FibWedgeTimeAxisPaneView[];
 
-  constructor(
-    points: Point[],
-    options: Partial<TimeLineOptions> = {}
-  ) {
+  constructor(points: Point[], options: Partial<TimeLineOptions> = {}) {
     super(points, defaultOptions, options);
 
     this._paneViews = [new TimeLinePaneView(this)];
-    points.forEach(point => {
+    points.forEach((point) => {
       this._timeAxisViews.push(new TimeLineTimeAxisView(this, point));
       this._priceAxisViews.push(new TimeLinePriceAxisView(this, point));
     });
@@ -293,8 +297,7 @@ class TimeLine extends DrawingBase<TimeLineOptions> {
   }
 
   public override updatePoint(p: Point, index: number) {
-    if (index >= this._points.length || index < 0)
-      return;
+    if (index >= this._points.length || index < 0) return;
 
     this._points[index] = p;
     this._paneViews[0].update();
@@ -305,11 +308,11 @@ class TimeLine extends DrawingBase<TimeLineOptions> {
   }
 
   updateAllViews() {
-    this._paneViews.forEach(pw => pw.update());
-    this._timeAxisViews.forEach(pw => pw.update());
-    this._priceAxisViews.forEach(pw => pw.update());
-    this._priceAxisPaneViews.forEach(pw => pw.update());
-    this._timeAxisPaneViews.forEach(pw => pw.update());
+    this._paneViews.forEach((pw) => pw.update());
+    this._timeAxisViews.forEach((pw) => pw.update());
+    this._priceAxisViews.forEach((pw) => pw.update());
+    this._priceAxisPaneViews.forEach((pw) => pw.update());
+    this._timeAxisPaneViews.forEach((pw) => pw.update());
   }
 
   priceAxisViews() {
@@ -346,10 +349,7 @@ class TimeLine extends DrawingBase<TimeLineOptions> {
 }
 
 class TimeLinePreview extends TimeLine {
-  constructor(
-    points: Point[],
-    options: Partial<TimeLineOptions> = {}
-  ) {
+  constructor(points: Point[], options: Partial<TimeLineOptions> = {}) {
     super(points, options);
     this._options.color = this._options.color;
   }
@@ -358,7 +358,8 @@ class TimeLinePreview extends TimeLine {
 export class TimeLineDrawingTool extends DrawingToolBase<
   DrawingBase<TimeLineOptions>,
   DrawingBase<TimeLineOptions>,
-  TimeLineOptions> {
+  TimeLineOptions
+> {
   constructor(
     chart: IChartApi,
     series: ISeriesApi<SeriesType>,

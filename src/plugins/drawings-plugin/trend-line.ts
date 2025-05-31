@@ -1,4 +1,7 @@
-import type { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas';
+import type {
+  BitmapCoordinatesRenderingScope,
+  CanvasRenderingTarget2D,
+} from "fancy-canvas";
 import type {
   Coordinate,
   IChartApi,
@@ -11,12 +14,22 @@ import type {
   SeriesType,
   Time,
   PrimitiveHoveredItem,
-} from 'lightweight-charts';
+} from "lightweight-charts";
 
-import { isBusinessDay } from 'lightweight-charts';
-import { DrawingBase, DrawingToolBase, RectangleAxisPaneRenderer, type Point, type ViewPoint } from './drawing-base.ts';
-import { Point as Point2D, Segment } from '@flatten-js/core';
-import { convertViewPointToPoint2D, convertToPrice, calculateDrawingPoint } from './conversion-helper.ts';
+import { isBusinessDay } from "lightweight-charts";
+import {
+  DrawingBase,
+  DrawingToolBase,
+  RectangleAxisPaneRenderer,
+  type Point,
+  type ViewPoint,
+} from "./drawing-base.ts";
+import { Point as Point2D, Segment } from "@flatten-js/core";
+import {
+  convertViewPointToPoint2D,
+  convertToPrice,
+  calculateDrawingPoint,
+} from "./conversion-helper.ts";
 
 class TrendLinePaneRenderer implements IPrimitivePaneRenderer {
   _points: ViewPoint[];
@@ -24,7 +37,12 @@ class TrendLinePaneRenderer implements IPrimitivePaneRenderer {
   _text2: string;
   _options: TrendLineOptions;
 
-  constructor(points: ViewPoint[], text1: string, text2: string, options: TrendLineOptions) {
+  constructor(
+    points: ViewPoint[],
+    text1: string,
+    text2: string,
+    options: TrendLineOptions
+  ) {
     this._points = points;
     this._text1 = text1;
     this._text2 = text2;
@@ -38,8 +56,12 @@ class TrendLinePaneRenderer implements IPrimitivePaneRenderer {
       }
 
       const ctx = scope.context;
-      const p1: Point2D = convertViewPointToPoint2D(calculateDrawingPoint(this._points[0], scope));
-      const p2: Point2D = convertViewPointToPoint2D(calculateDrawingPoint(this._points[1], scope));
+      const p1: Point2D = convertViewPointToPoint2D(
+        calculateDrawingPoint(this._points[0], scope)
+      );
+      const p2: Point2D = convertViewPointToPoint2D(
+        calculateDrawingPoint(this._points[1], scope)
+      );
 
       const x1Scaled = Math.round(p1.x);
       const y1Scaled = Math.round(p1.y);
@@ -58,14 +80,26 @@ class TrendLinePaneRenderer implements IPrimitivePaneRenderer {
     });
   }
 
-  _drawTextLabel(scope: BitmapCoordinatesRenderingScope, text: string, x: number, y: number, left: boolean) {
-    scope.context.font = '24px Arial';
+  _drawTextLabel(
+    scope: BitmapCoordinatesRenderingScope,
+    text: string,
+    x: number,
+    y: number,
+    left: boolean
+  ) {
+    scope.context.font = "24px Arial";
     scope.context.beginPath();
     const offset = 5 * scope.horizontalPixelRatio;
     const textWidth = scope.context.measureText(text);
     const leftAdjustment = left ? textWidth.width + offset * 4 : 0;
     scope.context.fillStyle = this._options.labelBackgroundColor;
-    scope.context.roundRect(x + offset - leftAdjustment, y - 24, textWidth.width + offset * 2, 24 + offset, 5);
+    scope.context.roundRect(
+      x + offset - leftAdjustment,
+      y - 24,
+      textWidth.width + offset * 2,
+      24 + offset,
+      5
+    );
     scope.context.fill();
     scope.context.beginPath();
     scope.context.fillStyle = this._options.labelTextColor;
@@ -81,7 +115,7 @@ class TrendLinePaneRenderer implements IPrimitivePaneRenderer {
     const currPoint = new Point2D(x, y);
     const segment: Segment = new Segment(vertex1, vertex2);
 
-    const tolerance: number = 3e-0;
+    const tolerance: number = 3;
     const hit = segment.distanceTo(currPoint)[0] < tolerance ? true : false;
 
     if (!hit) {
@@ -90,8 +124,8 @@ class TrendLinePaneRenderer implements IPrimitivePaneRenderer {
 
     return {
       cursorStyle: "grab",
-      externalId: 'trend-line-drawing',
-      zOrder: 'top',
+      externalId: "trend-line-drawing",
+      zOrder: "top",
     };
   }
 }
@@ -123,9 +157,9 @@ class TrendLinePaneView implements IPrimitivePaneView {
   renderer() {
     return new TrendLinePaneRenderer(
       this._drawingPoints,
-      '' + this._source._points[0].price.toFixed(1),
-      '' + this._source._points[1].price.toFixed(1),
-      this._source._options,
+      "" + this._source._points[0].price.toFixed(1),
+      "" + this._source._points[1].price.toFixed(1),
+      this._source._options
     );
   }
 }
@@ -162,8 +196,12 @@ abstract class RectangleAxisPaneView implements IPrimitivePaneView {
 class TrendLinePriceAxisPaneView extends RectangleAxisPaneView {
   getPoints(): [Coordinate | null, Coordinate | null] {
     const series = this._source.series;
-    const y1 = series.priceToCoordinate(convertToPrice(this._source._bounds._minPrice));
-    const y2 = series.priceToCoordinate(convertToPrice(this._source._bounds._maxPrice));
+    const y1 = series.priceToCoordinate(
+      convertToPrice(this._source._bounds._minPrice)
+    );
+    const y2 = series.priceToCoordinate(
+      convertToPrice(this._source._bounds._maxPrice)
+    );
     return [y1, y2];
   }
 }
@@ -171,8 +209,12 @@ class TrendLinePriceAxisPaneView extends RectangleAxisPaneView {
 class TrendLineTimeAxisPaneView extends RectangleAxisPaneView {
   getPoints(): [Coordinate | null, Coordinate | null] {
     const timeScale = this._source.chart.timeScale();
-    const x1 = timeScale.timeToCoordinate(this._source._bounds._minTime as Time);
-    const x2 = timeScale.timeToCoordinate(this._source._bounds._maxTime as Time);
+    const x1 = timeScale.timeToCoordinate(
+      this._source._bounds._minTime as Time
+    );
+    const x2 = timeScale.timeToCoordinate(
+      this._source._bounds._maxTime as Time
+    );
     return [x1, x2];
   }
 }
@@ -244,22 +286,21 @@ export interface TrendLineOptions {
 }
 
 const defaultOptions: TrendLineOptions = {
-  lineColor: 'rgba(222, 15, 15, 0.96)',
-  previewLineColor: 'rgba(222, 15, 15, 0.7)',
+  lineColor: "rgba(222, 15, 15, 0.96)",
+  previewLineColor: "rgba(222, 15, 15, 0.7)",
   width: 6,
   showLabels: true,
-  labelBackgroundColor: 'rgba(255, 255, 255, 0.85)',
-  labelTextColor: 'rgb(245, 9, 9)',
+  labelBackgroundColor: "rgba(255, 255, 255, 0.85)",
+  labelTextColor: "rgb(245, 9, 9)",
   priceLabelFormatter: (price: number) => price.toFixed(2),
   timeLabelFormatter: (time: Time) => {
-    if (typeof time == 'string') return time;
+    if (typeof time == "string") return time;
     const date = isBusinessDay(time)
       ? new Date(time.year, time.month, time.day)
       : new Date(time * 1000);
     return date.toLocaleDateString();
   },
 };
-
 
 class TrendLine extends DrawingBase<TrendLineOptions> {
   _paneViews: TrendLinePaneView[];

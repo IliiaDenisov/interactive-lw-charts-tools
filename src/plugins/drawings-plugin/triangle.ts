@@ -23,7 +23,10 @@ import {
 } from "./drawing-base.ts";
 import { Point as Point2D } from "@flatten-js/core";
 import { CollisionHelper } from "./collision-helper.ts";
-import { calculateDrawingPoint, convertViewPointToPoint2D } from "./conversion-helper.ts";
+import {
+  calculateDrawingPoint,
+  convertViewPointToPoint2D,
+} from "./conversion-helper.ts";
 
 class TrianglePaneRenderer implements IPrimitivePaneRenderer {
   _points: ViewPoint[];
@@ -44,7 +47,9 @@ class TrianglePaneRenderer implements IPrimitivePaneRenderer {
 
       const drawingPoints: Point2D[] = [];
       this._points.forEach((it) => {
-        drawingPoints.push(convertViewPointToPoint2D(calculateDrawingPoint(it, scope)));
+        drawingPoints.push(
+          convertViewPointToPoint2D(calculateDrawingPoint(it, scope))
+        );
       });
 
       if (drawingPoints.length < 3) {
@@ -77,12 +82,15 @@ class TrianglePaneRenderer implements IPrimitivePaneRenderer {
     const hitTestPoint: Point2D = new Point2D(x, y);
 
     const polygonPoints: Point2D[] = [
-          convertViewPointToPoint2D(this._points[0]),
-          convertViewPointToPoint2D(this._points[1]),
-          convertViewPointToPoint2D(this._points[2]),
+      convertViewPointToPoint2D(this._points[0]),
+      convertViewPointToPoint2D(this._points[1]),
+      convertViewPointToPoint2D(this._points[2]),
     ];
 
-    const hit: boolean = CollisionHelper.IsPointInPolygon(hitTestPoint, polygonPoints)
+    const hit: boolean = CollisionHelper.IsPointInPolygon(
+      hitTestPoint,
+      polygonPoints
+    );
 
     if (hit) {
       return {
@@ -121,10 +129,7 @@ class TrianglePaneView implements IPrimitivePaneView {
   }
 
   renderer() {
-    return new TrianglePaneRenderer(
-      this._drawingPoints,
-      this._source._options,
-    );
+    return new TrianglePaneRenderer(this._drawingPoints, this._source._options);
   }
 }
 
@@ -161,8 +166,12 @@ abstract class TriangleAxisPaneView implements IPrimitivePaneView {
 class TrianglePriceAxisPaneView extends TriangleAxisPaneView {
   getPoints(): [Coordinate | null, Coordinate | null] {
     const series = this._source.series;
-    const y1 = series.priceToCoordinate(this._source._bounds._minPrice as number);
-    const y2 = series.priceToCoordinate(this._source._bounds._maxPrice as number);
+    const y1 = series.priceToCoordinate(
+      this._source._bounds._minPrice as number
+    );
+    const y2 = series.priceToCoordinate(
+      this._source._bounds._maxPrice as number
+    );
     return [y1, y2];
   }
 }
@@ -170,8 +179,12 @@ class TrianglePriceAxisPaneView extends TriangleAxisPaneView {
 class TriangleTimeAxisPaneView extends TriangleAxisPaneView {
   getPoints(): [Coordinate | null, Coordinate | null] {
     const timeScale = this._source.chart.timeScale();
-    const x1 = timeScale.timeToCoordinate(this._source._bounds._minTime as Time);
-    const x2 = timeScale.timeToCoordinate(this._source._bounds._maxTime as Time);
+    const x1 = timeScale.timeToCoordinate(
+      this._source._bounds._minTime as Time
+    );
+    const x2 = timeScale.timeToCoordinate(
+      this._source._bounds._maxTime as Time
+    );
     return [x1, x2];
   }
 }
@@ -235,7 +248,7 @@ export interface TriangleOptions {
   fillColor: string;
   previewFillColor: string;
   lineColor: string;
-  lineWidth: number,
+  lineWidth: number;
   labelColor: string;
   labelTextColor: string;
   showLabels: boolean;
