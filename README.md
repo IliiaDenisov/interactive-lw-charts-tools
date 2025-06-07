@@ -37,5 +37,14 @@ series.attachPrimitive(bandsIndicator);
 chart.timeScale().fitContent(); 
 ```
 # Examples
+Collection of drawing tools of **interactive-lw-charts-tools** library added on a chart:
 
-![alt text](https://github.com/IliiaDenisov/interactive-lw-charts-tools/blob/main/readme_src/DrawingTools.png?raw=true)
+![Drawing tools](https://github.com/IliiaDenisov/interactive-lw-charts-tools/blob/main/readme_src/DrawingTools.png?raw=true)
+
+Simple Moving Average indicator:
+
+![Drawing tools](https://github.com/IliiaDenisov/interactive-lw-charts-tools/blob/main/readme_src/SMA.png?raw=true)
+
+Bollinger Bands indicator:
+
+![Drawing tools](https://github.com/IliiaDenisov/interactive-lw-charts-tools/blob/main/readme_src/BollingerBands.png?raw=true)
