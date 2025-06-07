@@ -36,4 +36,6 @@ const bandsIndicator = new BandsIndicator();
 series.attachPrimitive(bandsIndicator);
 chart.timeScale().fitContent(); 
 ```
+# Examples
 
+![alt text](https://github.com/IliiaDenisov/interactive-lw-charts-tools/blob/main/readme_src/DrawingTools.png?raw=true)
