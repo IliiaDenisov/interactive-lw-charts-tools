@@ -1,6 +1,6 @@
 {
   "name": "interactive-lw-charts-tools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "interactive-lw-charts-tools offers a collection of drawing tools and technical indicators built on top of the Lightweight-Charts library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
